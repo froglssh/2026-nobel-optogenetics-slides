@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 諾貝爾生醫獎：光遺傳學</title>
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#ffffff; --text:#1a1a1a; --sub:#4a4a4a;
+  --accent:#2563eb; --accent2:#1d4ed8; --border:#e2e5ea; --shadow:rgba(0,0,0,.10);
+  --barbg:#ffffff; --thumbbg:#eceef2; --thumbactive:#2563eb;
+}
+html[data-theme="dark"]{
+  --bg:#0d0f14; --panel:#161a22; --text:#f3f4f6; --sub:#c2c7d0;
+  --accent:#60a5fa; --accent2:#3b82f6; --border:#2a2f3a; --shadow:rgba(0,0,0,.5);
+  --barbg:#12151c; --thumbbg:#1f2430; --thumbactive:#60a5fa;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;
+  background:var(--bg); color:var(--text);
+  height:100vh; display:flex; flex-direction:column; overflow:hidden;
+  transition:background .3s,color .3s;
+}
+/* ---- Top bar ---- */
+header{
+  display:flex; align-items:center; gap:14px; padding:12px 20px;
+  background:var(--barbg); border-bottom:1px solid var(--border);
+  box-shadow:0 2px 10px var(--shadow); z-index:20; flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.logo{
+  width:40px;height:40px;border-radius:11px;flex:none;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+h1{font-size:22px;font-weight:800;letter-spacing:.5px;line-height:1.1}
+.subttl{font-size:12px;color:var(--sub);font-weight:500}
+.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.btn{
+  border:1px solid var(--border); background:var(--panel); color:var(--text);
+  padding:9px 15px; border-radius:10px; font-size:14px; font-weight:600;
+  cursor:pointer; display:inline-flex; align-items:center; gap:7px;
+  transition:transform .12s,background .2s,border-color .2s;
+}
+.btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.sec-input{
+  display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub);
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:6px 11px;
+}
+.sec-input input{
+  width:52px;border:none;background:transparent;color:var(--text);
+  font-size:15px;font-weight:700;text-align:center;outline:none;
+}
+.chk{
+  display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--sub);
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:7px 12px;cursor:pointer;user-select:none;
+}
+.chk input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.sec-input select{
+  border:none;background:transparent;color:var(--text);
+  font-size:13px;font-weight:700;outline:none;cursor:pointer;max-width:170px;
+}
+.sec-input select option{color:#111}
+/* ---- Main split ---- */
+main{flex:1;display:flex;min-height:0;position:relative}
+.slide-pane{
+  flex:0 0 66%; max-width:66%; background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:26px; position:relative; overflow:hidden;
+}
+.slide-pane img{
+  max-width:100%;max-height:100%;object-fit:contain;
+  border-radius:12px; box-shadow:0 10px 34px var(--shadow);
+  background:#fff;
+}
+.text-pane{
+  flex:1; min-width:0; background:var(--panel); border-left:1px solid var(--border);
+  padding:24px 26px; overflow-y:auto; display:flex;flex-direction:column;
+}
+.pagechip{
+  align-self:flex-start; font-size:12px; font-weight:700; color:#fff;
+  background:var(--accent); padding:3px 12px; border-radius:20px; margin-bottom:12px;
+}
+.text-pane h2{
+  font-size:22px; font-weight:800; line-height:1.3; margin-bottom:14px;
+  color:var(--text); border-bottom:3px solid var(--accent); padding-bottom:11px;
+}
+.text-pane p{
+  font-size:16px; line-height:1.7; color:var(--sub); margin-bottom:13px;
+  letter-spacing:.2px;
+}
+.text-pane p:last-child{margin-bottom:0}
+/* Nav arrows over slide */
+.nav-arrow{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:48px;height:48px;border-radius:50%;border:none; cursor:pointer;
+  background:rgba(37,99,235,.85); color:#fff; font-size:24px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.3); transition:background .2s,transform .12s; z-index:6;
+}
+.nav-arrow:hover{background:var(--accent2);transform:translateY(-50%) scale(1.08)}
+.nav-arrow.prev{left:16px}
+.nav-arrow.next{right:16px}
+/* ---- Thumbnail strip ---- */
+.filmstrip{
+  background:var(--barbg); border-top:1px solid var(--border);
+  padding:9px 12px; display:flex; align-items:center; gap:10px; z-index:15;
+}
+.strip-scroll{
+  display:flex; gap:8px; overflow-x:auto; overflow-y:hidden; padding:3px 2px 7px;
+  scroll-behavior:smooth; flex:1;
+}
+.strip-scroll::-webkit-scrollbar{height:8px}
+.strip-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.thumb{
+  flex:none; width:118px; height:67px; border-radius:7px; cursor:pointer;
+  border:3px solid transparent; background:var(--thumbbg); position:relative;
+  overflow:hidden; transition:border-color .15s,transform .12s;
+}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb:hover{transform:translateY(-2px)}
+.thumb.active{border-color:var(--thumbactive)}
+.thumb .tn{
+  position:absolute;left:0;bottom:0;background:rgba(0,0,0,.62);color:#fff;
+  font-size:11px;font-weight:700;padding:1px 6px;border-top-right-radius:6px;
+}
+.jump{
+  display:flex;align-items:center;gap:7px;font-size:13px;color:var(--sub);flex:none;
+}
+.jump input{
+  width:56px;padding:6px;border-radius:8px;border:1px solid var(--border);
+  background:var(--panel);color:var(--text);text-align:center;font-size:14px;font-weight:700;
+}
+/* ---- Fullscreen presentation ---- */
+#fs{
+  position:fixed;inset:0;background:#000;z-index:100;display:none;
+  align-items:center;justify-content:center;
+}
+#fs.show{display:flex}
+#fs img{max-width:100%;max-height:100%;object-fit:contain}
+.fs-ui{
+  position:fixed;top:18px;right:18px;display:flex;gap:10px;align-items:center;
+  z-index:110; opacity:.25; transition:opacity .25s;
+}
+#fs:hover .fs-ui{opacity:1}
+.fs-btn{
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;
+  padding:9px 14px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;
+  backdrop-filter:blur(6px);
+}
+.fs-btn:hover{background:rgba(255,255,255,.28)}
+.fs-count{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  color:#fff;background:rgba(0,0,0,.5);padding:6px 18px;border-radius:20px;
+  font-size:15px;font-weight:700;z-index:110;opacity:.3;transition:opacity .25s;
+}
+#fs:hover .fs-count{opacity:1}
+.fs-arrow{
+  position:fixed;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:50%;
+  background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);color:#fff;
+  font-size:28px;cursor:pointer;z-index:110;opacity:.2;transition:opacity .25s;
+  display:flex;align-items:center;justify-content:center;
+}
+#fs:hover .fs-arrow{opacity:.85}
+.fs-arrow.p{left:22px}.fs-arrow.n{right:22px}
+/* ---- Footer ---- */
+footer{
+  background:var(--barbg);border-top:1px solid var(--border);
+  text-align:center;padding:8px;font-size:13px;color:var(--sub);font-weight:600;letter-spacing:.5px;
+}
+footer b{color:var(--accent);font-weight:800}
+/* ---- Responsive ---- */
+@media(max-width:860px){
+  main{flex-direction:column}
+  .slide-pane{flex:0 0 52%;max-width:100%;padding:14px}
+  .text-pane{border-left:none;border-top:1px solid var(--border);padding:16px}
+  .text-pane h2{font-size:19px}
+  .text-pane p{font-size:15px;line-height:1.65}
+  h1{font-size:18px}
+  .thumb{width:92px;height:52px}
+}
+.playing-badge{
+  position:absolute;top:16px;left:16px;background:rgba(37,99,235,.9);color:#fff;
+  padding:5px 13px;border-radius:20px;font-size:13px;font-weight:700;z-index:6;display:none;
+}
+.playing-badge.show{display:block}
+</style>
+</head>
+<body data-theme="light">
+<header>
+  <div class="brand">
+    <div class="logo">🧠</div>
+    <div>
+      <h1>2026 諾貝爾生醫獎：光遺傳學</h1>
+      <div class="subttl">高中生物選修課程 · 逐頁語音導讀與圖文對照</div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="sec-input" title="設定自動播放秒數">
+      <span>秒數</span><input id="secIn" type="number" min="1" max="120" value="8"><span>秒</span>
+    </div>
+    <button class="btn" id="autoBtn">▶ 自動播放</button>
+    <label class="chk" title="開啟後，自動播放會唸完整頁旁白才換頁；關閉則依上方秒數換頁">
+      <input type="checkbox" id="waitSpeak" checked> 朗讀完才換頁
+    </label>
+    <div class="sec-input" title="選擇朗讀語音（清單依你電腦已安裝的語音而定，建議挑「Google」或加強版語音最自然）">
+      <span>語音</span><select id="voiceSel"></select>
+    </div>
+    <div class="sec-input" title="設定朗讀語速">
+      <span>語速</span><input id="rateIn" type="number" min="0.5" max="2" step="0.05" value="0.95"><span>×</span>
+    </div>
+    <div class="sec-input" title="設定音調高低（1 為原音，低一點較沉穩、高一點較活潑）">
+      <span>音調</span><input id="pitchIn" type="number" min="0.5" max="1.5" step="0.05" value="1.0"><span>♪</span>
+    </div>
+    <button class="btn" id="speakBtn">🔊 朗讀旁白</button>
+    <button class="btn primary" id="fsBtn">⛶ 全螢幕播放</button>
+    <button class="btn" id="themeBtn">🌙 深色</button>
+    <a href="https://froglssh.github.io/2026-nobel-optogenetics-page/" target="_blank" class="btn" style="text-decoration:none;" title="前往 2026 諾貝爾生醫獎完整教學網頁">📖 教學網頁</a>
+  </div>
+</header>
+
+<main>
+  <section class="slide-pane">
+    <div class="playing-badge" id="badge">自動播放中…</div>
+    <button class="nav-arrow prev" id="prev">‹</button>
+    <img id="mainImg" src="" alt="投影片">
+    <button class="nav-arrow next" id="next">›</button>
+  </section>
+  <section class="text-pane" id="textPane">
+    <span class="pagechip" id="chip">第 1 / 70 頁</span>
+    <h2 id="title"></h2>
+    <div id="body"></div>
+  </section>
+</main>
+
+<div class="filmstrip">
+  <div class="jump">
+    <span>跳頁</span>
+    <input id="jumpIn" type="number" min="1" max="30" value="1">
+    <span>/ 30</span>
+  </div>
+  <div class="strip-scroll" id="strip"></div>
+</div>
+
+<footer>臺北市立麗山高中 · <b>老師</b></footer>
+
+<!-- Fullscreen -->
+<div id="fs">
+  <button class="fs-arrow p" id="fsPrev">‹</button>
+  <img id="fsImg" src="" alt="">
+  <button class="fs-arrow n" id="fsNext">›</button>
+  <div class="fs-ui">
+    <button class="fs-btn" id="fsSpeak">🔊 朗讀旁白</button>
+    <button class="fs-btn" id="fsAuto">▶ 自動播放</button>
+    <button class="fs-btn" id="fsExit">✕ 離開全螢幕</button>
+  </div>
+  <div class="fs-count" id="fsCount"></div>
+</div>
+
+<script>
+const SLIDES = [{"n": 1, "title": "一束光，如何讓神經元聽指令？", "paras": ["各位同學好，歡迎來到 2026 年諾貝爾生理醫學獎的專題課堂：光遺傳學（Optogenetics）。想像一下，如果我們只要用一束微弱的光線照射大腦，就能在千分之一秒內隨意啟動或關閉特定的神經元，大腦的秘密是不是就能被徹底解開了？", "這場神經科學的世紀革命，起點竟然來自池塘裡微小的單細胞綠藻。今天這堂課，我們就一起來見證生物物理學、電生理學與神經工程學如何跨界接力，將大自然的感光機制轉化為精準解碼大腦的關鍵鑰匙。"]}, {"n": 2, "title": "學習目標：解開三個核心謎題", "paras": ["在今天的探索歷程中，我們要一起破解三個環環相扣的核心謎題。首先是分子機制：光究竟如何跨越神經傳導物質的限制，直接推開細胞膜上的離子通道？", "第二個是基因靶向：大腦裡有上百億個神經元交織在一起，我們該如何發放專屬的「基因門禁卡」，只讓目標細胞聽從光指令？最後是因果推理：如何透過「能開又能關」的雙向調控驗證神經迴路的因果關係，並客觀評估臨床醫學的極限。"]}, {"n": 3, "title": "先備知識銜接：高中生物的核心基石", "paras": ["在進入諾貝爾獎的精彩細節前，我們先把高中生物的幾塊重要基石拼湊起來。必修生物告訴我們，細胞膜的磷脂雙層具有選擇通透性，帶電離子無法自由穿透，必須倚賴特定的膜蛋白協助。", "而在選修生物中，我們學過通道蛋白與幫浦蛋白的根本差別、啟動子調控基因表現的專一性，以及神經元由負七十毫伏特的靜止電位，跨越負五十毫伏特閾值引發動作電位的全有全無律。這些正是理解光遺傳學不可或缺的學科基石。"]}, {"n": 4, "title": "2026 諾貝爾桂冠：三位科學家的跨領域接力", "paras": ["這座桂冠由三位跨領域科學家共同摘下，呈現了一場完美的科學接力賽。第一棒是德國生物物理學家赫吉曼（Peter Hegemann），他大膽提出綠藻的趨光反應來自單一感光離子通道。", "第二棒是電生理學家內格爾（Georg Nagel），他跨界將基因植入爪蟾卵母細胞，首度在膜片鉗下證實了光直接閘控離子流；第三棒則是美國神經工程師戴瑟羅斯（Karl Deisseroth），他成功將感光蛋白導入哺乳類大腦神經元，正式點亮了整座腦科學殿堂。"]}, {"n": 5, "title": "腦科學的百年困境：電刺激與藥物治療的兩難", "paras": ["過去一百多年來，神經科學家想探討某個腦區的功能，只能仰賴電刺激或化學藥物，但這兩種方法都有致命的瓶頸。金屬微電極刺激雖然具備毫秒級的高時間精度，卻毫無細胞專一性，周圍無論興奮性或抑制性神經元全被一網打盡。", "而藥物受體活化雖然具有分子專一性，但藥物擴散緩慢、代謝耗時數分鐘，根本跟不上大腦毫秒級的脈衝節奏。科學界極度渴望一種能兼具「毫秒時間精度」與「單細胞空間專一性」的嶄新工具。"]}, {"n": 6, "title": "綠藻的啟發：演化數億年的「全合一」感光開關", "paras": ["突破的曙光來自最意想不到的微觀生物——衣藻。單細胞綠藻為了行光合作用，演化出了能夠靈活游向適當光源的趨光性。", "傳統動物視網膜感光需要經過 G 蛋白與酵素級聯放大，步驟繁複；但赫吉曼發現，衣藻眼點上的通道視紫紅質（ChR）極為獨特，它將「感光受體」與「離子通道」完美合而為一！只要一個光子打中，單一分子立刻打開閘門，這正是大自然演化數億年的全合一神級設計。"]}, {"n": 7, "title": "跨物種驗證：Nagel 2003 的決定性電生理實驗", "paras": ["2003 年，內格爾完成了一項決定性的突破。他將衣藻的 ChR2 基因選殖出來，轉染到完全不具趨光性的非洲爪蟾卵母細胞與人體培養細胞中。", "當他用 470 奈米藍光脈衝照射細胞時，膜片鉗儀器瞬間記錄到了巨大的內向陽離子電流；而藍光一關，電流立刻在毫秒內歸零！這項實驗雄辯地證實：ChR2 不需要任何藻類專屬酵素或輔助蛋白，它本身就是一個能跨物種運作的獨立光閘控離子通道。"]}, {"n": 8, "title": "神經工程化：Boyden & Deisseroth 2005 點亮大腦", "paras": ["緊接著在 2005 年，戴瑟羅斯與研究生博伊登（Edward Boyden）完成了神經科學的歷史性飛躍。他們利用改裝的慢病毒載體，將 ChR2 基因送入離體培養的大鼠海馬迴神經元。", "實驗中出現了一個關鍵的幸運驚喜：哺乳動物神經組織中本來就富含視網醛，完全無須額外添加輔基！當藍光脈衝閃爍時，示波器上記錄到神經元毫秒內精準觸發動作電位，每一發光閃就精準伴隨一次神經放電，光遺傳學自此正式誕生。"]}, {"n": 9, "title": "基因門禁卡：如何只讓目標神經元表現 ChR2？", "paras": ["大腦中細胞種類繁多，病毒載體注射進去會感染各種鄰近細胞，我們該如何做到單細胞精準靶向？關鍵就在於高中生物學過的「啟動子（Promoter）」。", "同一生物體的細胞基因體相同，但唯有特定細胞才擁有活化特定啟動子的轉錄因子。例如，我們只要挑選興奮性神經元專屬的 CaMKIIα 啟動子，或是多巴胺神經元專屬的 DAT 啟動子，就能像發放專屬門禁卡一樣，讓 ChR2 只在目標細胞中被轉錄轉譯出來。"]}, {"n": 10, "title": "ChR2 分子機制全解析：藍光如何推開離子閘門？", "paras": ["現在我們深入分子微觀結構。ChR2 是一個七次跨膜的螺旋蛋白，中心共價結合著全反式視網醛。當吸收 470 奈米藍光光子時，視網醛在幾皮秒內異構化為 13-順式結構。", "這個形變帶動跨膜螺旋扭轉，推開了中央的親水性孔道。此時細胞外的鈉離子順著電化學梯度順流而入，屬於促進性擴散的被動運輸。大量正電荷湧入使膜電位由負七十去極化跨越負五十毫伏特，瞬間引爆了動作電位！"]}, {"n": 11, "title": "踩下神經煞車：NpHR 鹵視紫質與黃光過極化抑制", "paras": ["在神經迴路的研究中，單純能夠「開」遠遠不夠，科學家同樣需要能夠精準「關」掉放電的煞車踏板。這時另一種古菌感光蛋白——嗜鹽古菌鹵視紫質（NpHR）登場了。", "NpHR 是一個光驅動的氯離子幫浦。當我們用 590 奈米黃光照射時，它利用光能將帶負電的氯離子主動泵入細胞內，使細胞膜發生過極化，電位遠低於負七十毫伏特。此時神經元被牢牢踩住煞車，放電立即停止；黃光一撤，神經元又瞬間恢復生機。"]}, {"n": 12, "title": "物質運輸比一比：ChR2 vs NpHR vs 鈉鉀幫浦", "paras": ["我們把課本學過的三種重要膜蛋白放在一起橫向評比。ChR2 屬於離子通道蛋白，進行的是被動運輸中的促進性擴散，不需要細胞消耗 ATP，離子順著電化學梯度內流。", "相反地，NpHR 屬於主動運輸的幫浦蛋白，它直接利用光能逆濃度梯度泵入氯離子；而我們熟悉的鈉鉀幫浦則是消耗 ATP 水解能量來維持靜止電位。透過這個對比，大家能清楚辨析能量來源與運輸機制的異同。"]}, {"n": 13, "title": "演化與設計：藻類通道視紫紅質 vs 人眼視紫素", "paras": ["大家常問：人眼的視紫素跟綠藻的通道視紫紅質有何不同？雖然兩者都是七次跨膜且共價結合視網醛，但演化策略完全不同。", "藻類的 ChR2 追求的是「極致速度」，直接以單一分子開孔，毫秒級快速轉向；而我們人類視網膜的視紫素則是 G 蛋白偶聯受體（GPCR），追求的是「極致微光靈敏度」，透過第二傳訊者串聯放大訊號。大自然在速度與靈敏度之間，展現了截然不同的演化智慧。"]}, {"n": 14, "title": "諾貝爾獎跨界聯想：2021 TRPV1 與 2026 ChR2", "paras": ["我們把 2021 年的諾貝爾生醫獎拿來橫向串聯。2021 年得獎的 TRPV1 與 Piezo 是溫度與機械壓力受器，它們與 ChR2 的共同點在於：都是由外界物理刺激直接開啟通道引發去極化。", "但根本差異在於，TRPV1 是人體神經系統與生俱來的內生感覺受器；而 ChR2 則是微生物演化出來的外源蛋白，必須藉由合成生物學與病毒基因轉殖，才能人為賦予哺乳動物神經元感光的能力。"]}, {"n": 15, "title": "基礎研究的非凡價值：從綠藻游動到腦醫學革命", "paras": ["回顧這段歷史，赫吉曼在 1980 年代純粹因為好奇綠藻為什麼會游向光線而展開研究，當時絕對沒有人想得到，這項研究竟會在四十年後引爆全球腦科學革命。", "這充分體現了「純好奇心驅動的基礎科學（Blue-sky science）」無可取代的非凡價值。重大科學顛覆從來不是單一學科能完成的，而是植物學、生物物理學、分子遺傳學與微光電工程學交織激盪的豐碩成果。"]}, {"n": 16, "title": "隨堂評量（一）：光閘控通道本質與動作電位特性", "paras": ["現在我們進行隨堂概念檢核。請大家看投影片上的兩道核心試題：第一題探討 ChR2 的膜蛋白傳輸本質，以及哺乳類細胞是否需要外加視網醛？", "第二題則是一個關鍵概念陷阱：當我們增強藍光脈衝強度與頻率時，神經元的膜電位會產生什麼樣的變化？請同學們結合高中生物選修單元，給自己一分鐘時間思考正確選項。"]}, {"n": 17, "title": "評量解析（一）：全有全無律與被動運輸的嚴謹界定", "paras": ["我們來看試題解析。第一題中，ChR2 介導的是鈉離子順電化學梯度流入，屬於被動運輸；且哺乳動物體內原本就含有視網醛，不需要額外添加。", "第二題是經典的迷思破除：強光刺激雖然會提高通道開放機率，但單一動作電位的振幅是由內外離子濃度梯度與全有全無律決定的，絕對不會因為光太強而飆高到一百毫伏特！大腦是靠放電的「頻率」而非「振幅」來傳遞訊號強度的。"]}, {"n": 18, "title": "隨堂評量（二）：細胞專一性表現與雙光操控原理", "paras": ["接下來看第二組評量。第四題問：如果我們想在小鼠大腦中，只讓掌管獎勵迴路的多巴胺神經元表現 ChR2，應該採取什麼策略？", "第五題則探討 ChR2 與 NpHR 的雙色光操控：我們能否用藍光興奮、黃光抑制來靈活調控同一個神經元？請大家特別留意題目中是否有隱蔽的概念陷阱。"]}, {"n": 19, "title": "評量解析（二）：打破「同一蛋白藍開黃關」的直覺陷阱", "paras": ["解題關鍵在於：第四題必須依賴多巴胺神經元專屬的 DAT 啟動子，因為只有該類細胞具備相應的轉錄因子來啟動表現。", "第五題則破除了一個致命的直覺陷阱：ChR2 和 NpHR 來自兩種完全不同的微生物，是兩個獨立的蛋白質，絕不是「同一個蛋白照不同光會變色變形」！科學家是將這兩種基因同時導入同一個神經元，實現雙色光的正反向遙控。"]}, {"n": 20, "title": "隨堂評量（三）：臨床治療門檻與視網膜修復案例", "paras": ["評量第三部分我們聚焦臨床轉譯的現實考量。光遺傳學在實驗動物中屢創奇蹟，但要真正應用於人體疾病治療，究竟面臨哪些嚴峻的臨床技術門檻？", "我們歸納出三大關鍵瓶頸：第一是外源病毒載體的免疫排斥風險；第二是大腦深部組織的光散射嚴重，需要侵入性開顱植入光纖；第三是人體神經元終身表現外來微生物蛋白的長期安全性依然未知。"]}, {"n": 21, "title": "探究情境：大腦異常放電與神經群 Y 的因果假說", "paras": ["進入今天的探究實作單元。臨床上癲癇發作源於大腦神經元失控的同步異常放電。研究團隊在小鼠海馬迴中發現了一群放電異常激烈的神經元，我們稱之為 Y 群神經元。", "為了探究 Y 群神經元在癲癇中的因果角色，科學家提出了兩項互補假說：第一是「充分性假說」——單純活化 Y 群神經元就足以誘發癲癇發作；第二是「維持必要性假說」——癲癇之所以能持續發作，必須依賴 Y 群神經元的不斷放電。"]}, {"n": 22, "title": "嚴謹實驗設計：六組對照組的科學邏輯", "paras": ["為了嚴謹檢驗這兩項假說，研究團隊設計了六個實驗組。驗證充分性的誘發實驗包含甲、乙、丙三組；驗證必要性的終止實驗則包含丁、戊、己三組。", "請大家特別思考：為什麼實驗中必須設立「只表現綠色螢光蛋白 GFP 且照光」的乙組與己組？因為雷射光照射會產生局部升溫，我們必須排除純粹光熱效應或物理刺激引發放電的可能性，這正是科學對照的核心精神。"]}, {"n": 23, "title": "表 1 數據解讀：Y 群活化「足以誘發」癲癇發作", "paras": ["我們檢視表一的實驗數據。在給予 470 奈米藍光後，只有表現 ChR2 的甲組在十隻小鼠中有八隻成功誘發了癲癇發作，平均持續二十四秒；而對照的乙組與丙組發作率皆為零。", "這項數據強烈支持了充分性假說：在該動物模型中，活化 Y 群神經元確實「足以誘發」癲癇。但請同學務必注意科學推論的邊界：這只能證明在該特定模型下具備充分性，不能過度推論為人類所有癲癇的唯一起源。"]}, {"n": 24, "title": "表 2 數據解讀：NpHR 黃光抑制「顯著終止」發作", "paras": ["接著看表二的抑制實驗數據。當癲癇誘發後立即給予 590 奈米黃光照射，表現 NpHR 的丁組發作時間驟降至九秒，且高達七成在五秒內被強制終止！相較之下，戊組與己組的發作時間均長達四十五秒以上。", "這個極為顯著的抑制效果，有力地證實了「維持必要性假說」：Y 群神經元的持續放電，確實是維持該癲癇發作所不可或缺的環節，因果鏈條自此完整確立。"]}, {"n": 25, "title": "探究題評析：從數據到結論——科學推論的邊界", "paras": ["在評析探究問題時，高中生最常犯的推論謬誤就是過度外推，認為「既然黃光能救小鼠，就該立刻給人類癲癇病患照光」。", "大考素養評分規準要求我們看見科學證據的邊界：小鼠腦部結構與人類大腦差異極大，且癲癇發作瞬間需要即時偵測腦電波並自動給光的「閉環式智能光感應系統」，技術難度極高。真正的科學家既懂得用數據支持假說，更清楚掌握推論的邊界。"]}, {"n": 26, "title": "走向臨床：2021 Nature Medicine 盲人視力部分復原", "paras": ["光遺傳學走向臨床的第一線曙光出現在眼科。視網膜色素變性疾病會導致患者感光細胞凋亡，但傳遞訊號至大腦的神經節細胞依然存活。", "2021 年頂尖醫學期刊報導，醫療團隊利用腺相關病毒將感光蛋白導入神經節細胞，並讓近乎全盲近四十年的患者配戴特製的光學眼鏡。患者成功恢復了部分光感，能辨識並拿取桌面上的物體，這是光遺傳學跨入人類臨床治療的重大里程碑。"]}, {"n": 27, "title": "生命倫理思辨：如果有一天，能用光「關閉創傷記憶」？", "paras": ["隨著光遺傳學能精準操控恐懼記憶，我們也必須直面深層的生命倫理思辨。諾貝爾獎得主利根川進團隊已經能在小鼠大腦中，透過光纖精準喚醒恐懼記憶，甚至植入虛假記憶。", "如果未來能用光束幫創傷後壓力症候群（PTSD）患者消除痛苦創傷記憶，你贊成嗎？若記憶構成了我們的人格，刪除痛苦回憶後，我們還是原本的自己嗎？在醫療減輕痛苦與人類意志改造之間，倫理的界線到底應該劃在哪裡？"]}, {"n": 28, "title": "科學本質與榮耀：3R 原則與被遺漏的貢獻者", "paras": ["在探討腦科學突破的同時，我們絕不能忽視實驗動物的福祉。現代科學界嚴格遵循 3R 原則：替代、減量與精緻化，確保以最少動物、最低痛苦獲取最高品質的科學數據。", "此外，諾貝爾獎規定單項至多頒給三人，但科學從來不是孤膽英雄的功勞。像博伊登、張鋒、班貝格等眾多科學家的共同奉獻，才促成了這項革命。每一座科學桂冠背後，都是整個科學社群接力奮鬥的結晶。"]}, {"n": 29, "title": "核心統整概念圖：光、基因、電位與大腦因果鏈", "paras": ["課程即將進入尾聲，我們用這張全景概念圖將今天所學串聯起來。整個光遺傳學由三個層次構成：在基因層次，利用細胞專一性啟動子與病毒載體精準鎖定目標細胞；", "在物理化學層次，透過特定波長的光子引發視網醛異構化，開啟通道或驅動離子幫浦造成電位變化；最後在神經系統層次，藉由產生或阻斷動作電位，我們終於能在毫秒級尺度下操縱神經迴路，徹底確立大腦迴路與行為的因果關係！"]}, {"n": 30, "title": "離堂任務與延伸閱讀：用三句話定義光遺傳學", "paras": ["最後是大家的離堂任務（Exit Ticket）。請每位同學在學習單上寫下三句話總結今天所學：一句話說清楚光改變膜電位的分子機制，一句話說清楚如何只讓目標神經元聽話，一句話說清楚為什麼光遺傳學能確立大腦神經因果。", "對這項世紀突破想更深入探究的同學，也可以閱讀畫面中的經典文獻。謝謝大家的專注聆聽，我們下堂課見！"]}];
+const imgPath = n => `origin_image/slide_${String(n).padStart(2,'0')}.png`;
+let cur = 0;              // 0-indexed
+let autoTimer = null;     // inline autoplay
+let fsTimer = null;       // fullscreen autoplay
+
+const $ = id => document.getElementById(id);
+const mainImg=$('mainImg'), titleEl=$('title'), bodyEl=$('body'),
+      chip=$('chip'), strip=$('strip'), jumpIn=$('jumpIn'),
+      fsImg=$('fsImg'), fsCount=$('fsCount'), fs=$('fs'), badge=$('badge');
+
+jumpIn.max = SLIDES.length;
+
+// build thumbnails
+SLIDES.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='thumb'; d.dataset.i=i;
+  d.innerHTML=`<img loading="lazy" src="${imgPath(s.n)}"><span class="tn">${s.n}</span>`;
+  d.onclick=()=>{ go(i); };
+  strip.appendChild(d);
+});
+const thumbs=[...strip.children];
+
+function render(){
+  const s=SLIDES[cur];
+  mainImg.src=imgPath(s.n);
+  titleEl.textContent=s.title;
+  bodyEl.innerHTML=s.paras.map(p=>`<p>${p}</p>`).join('');
+  chip.textContent=`第 ${s.n} / ${SLIDES.length} 頁`;
+  jumpIn.value=s.n;
+  $('textPane').scrollTop=0;
+  thumbs.forEach((t,i)=>t.classList.toggle('active',i===cur));
+  const at=thumbs[cur];
+  if(at) at.scrollIntoView({inline:'center',block:'nearest'});
+  if(fs.classList.contains('show')){ fsImg.src=imgPath(s.n); fsCount.textContent=`${s.n} / ${SLIDES.length}`; }
+}
+function go(i){ cur=(i+SLIDES.length)%SLIDES.length; render(); if(narrating) speakCurrent(); }
+function nextS(){ go(cur+1); }
+function prevS(){ go(cur-1); }
+
+// ---- 旁白朗讀 (Web Speech API) ----
+let narrating=false, zhVoice=null, advanceTimer=null, allVoices=[];
+const synth=window.speechSynthesis;
+// 語音「自然度」評分：線上 Google、加強版、Siri、神經網路語音優先
+function voiceScore(v){
+  const n=(v.name||'')+' '+(v.voiceURI||''); let s=0;
+  if(/zh[-_]TW|zh[-_]Hant|cmn/i.test(v.lang)) s+=40;       // 繁中臺灣優先
+  else if(/^zh|zh[-_]CN|zh[-_]HK/i.test(v.lang)) s+=20;    // 其他中文次之
+  if(/google/i.test(n)) s+=30;                             // Chrome 線上 Google 語音最自然
+  if(/enhanced|premium|加強|進階|neural|natural/i.test(n)) s+=25;
+  if(/siri/i.test(n)) s+=20;
+  if(/美嘉|meijia|台湾|臺灣|taiwan/i.test(n)) s+=10;
+  return s;
+}
+function buildVoiceList(){
+  if(!synth) return;
+  allVoices=synth.getVoices();
+  // 只保留「Google 國語（臺灣）」語音
+  const gtw=allVoices.filter(v=>/google/i.test(v.name) && /zh[-_]TW|zh[-_]Hant|國語|臺灣|台灣/i.test((v.name||'')+' '+v.lang));
+  const sel=$('voiceSel');
+  sel.innerHTML='';
+  if(gtw.length){
+    gtw.forEach(v=>{
+      const o=document.createElement('option');
+      o.value=allVoices.indexOf(v);
+      o.textContent=`${v.name} (${v.lang}) ✨線上`;
+      sel.appendChild(o);
+    });
+    sel.value=allVoices.indexOf(gtw[0]); zhVoice=gtw[0];
+  }else{
+    // 找不到時給提示（多半是沒用 Chrome 或未連網），仍以系統預設繁中發音
+    const o=document.createElement('option');
+    o.value=''; o.textContent='找不到 Google 國語（臺灣）— 請用 Chrome 並連網';
+    sel.appendChild(o); zhVoice=null;
+  }
+}
+if(synth){
+  buildVoiceList();
+  synth.onvoiceschanged=buildVoiceList;   // 語音清單常延遲載入，載好再補上
+  $('voiceSel').addEventListener('change',()=>{
+    zhVoice=allVoices[parseInt($('voiceSel').value)]||null;
+    if(narrating) speakCurrent();          // 立即試聽新語音
+  });
+}
+// 將整頁各段切成短句（跳過標題），直接播放內容文字，
+// 短句可避開 Chrome 長語句會從頭重播的已知問題（造成標題重複）。
+function buildChunks(s){
+  const out=[];
+  [...s.paras].forEach(t=>{
+    (t||'').split(/(?<=[。！？!?；;：])/).forEach(p=>{ p=p.trim(); if(p) out.push(p); });
+  });
+  return out;
+}
+let speakGen=0;   // 世代編號，讓被取消的舊回呼失效，避免重播/重複
+function speakCurrent(){
+  if(!synth){ alert('您的瀏覽器不支援語音朗讀，請改用 Chrome 或 Edge。'); return; }
+  const gen=++speakGen;
+  synth.cancel(); clearTimeout(advanceTimer);
+  const chunks=buildChunks(SLIDES[cur]);
+  const rate=Math.min(2,Math.max(0.5,parseFloat($('rateIn').value)||0.95));
+  const pitch=Math.min(1.5,Math.max(0.5,parseFloat($('pitchIn').value)||1));
+  let i=0;
+  (function next(){
+    if(gen!==speakGen) return;                 // 已被新的朗讀取代
+    if(i>=chunks.length){                       // 本頁唸完
+      if(narrating && cur<SLIDES.length-1){ advanceTimer=setTimeout(()=>{ if(narrating && gen===speakGen) go(cur+1); },900); }
+      else if(narrating){ stopPlay(); }         // 最後一頁停止
+      return;
+    }
+    const u=new SpeechSynthesisUtterance(chunks[i]);
+    u.lang='zh-TW'; if(zhVoice) u.voice=zhVoice; u.rate=rate; u.pitch=pitch;
+    u.onend=()=>{ if(gen!==speakGen) return; i++;
+      // 句與句之間留一點自然停頓，聽起來比較像人在說話
+      const gap = /[。！？!?]$/.test(chunks[i-1]) ? 260 : 90;
+      setTimeout(()=>{ if(gen===speakGen) next(); }, gap);
+    };
+    u.onerror=()=>{};                           // 取消時的 error 忽略
+    synth.speak(u);
+  })();
+}
+// ---- 統一播放控制 ----
+// 模式一：勾選「朗讀完才換頁」→ 由旁白驅動，唸完整頁才換頁（不受秒數限制）
+// 模式二：取消勾選 → 依上方秒數固定換頁（無旁白）
+function secs(){ let v=parseInt($('secIn').value)||8; return Math.max(1,v)*1000; }
+function uiReset(){
+  $('autoBtn').classList.remove('on'); $('autoBtn').innerHTML='▶ 自動播放';
+  $('speakBtn').classList.remove('on'); $('speakBtn').innerHTML='🔊 朗讀旁白';
+  $('fsAuto').innerHTML='▶ 自動播放'; $('fsSpeak').innerHTML='🔊 朗讀旁白';
+  badge.classList.remove('show');
+}
+function stopPlay(){                     // 停止所有播放（計時＋旁白）
+  clearInterval(autoTimer); autoTimer=null;
+  narrating=false; if(synth) synth.cancel(); clearTimeout(advanceTimer);
+  uiReset();
+}
+function startTimer(){                   // 秒數驅動（無旁白）
+  stopPlay(); autoTimer=setInterval(nextS,secs());
+  $('autoBtn').classList.add('on'); $('autoBtn').innerHTML='⏸ 停止播放';
+  $('fsAuto').innerHTML='⏸ 停止播放';
+  badge.textContent='自動播放中…'; badge.classList.add('show');
+}
+function startNarrate(){                 // 旁白驅動：唸完才換頁
+  stopPlay(); narrating=true;
+  $('speakBtn').classList.add('on'); $('speakBtn').innerHTML='⏹ 停止朗讀';
+  $('autoBtn').classList.add('on'); $('autoBtn').innerHTML='⏸ 停止播放';
+  $('fsSpeak').innerHTML='⏹ 停止朗讀'; $('fsAuto').innerHTML='⏸ 停止播放';
+  badge.textContent='旁白朗讀中…'; badge.classList.add('show');
+  speakCurrent();
+}
+function isPlaying(){ return !!autoTimer || narrating; }
+function startPlay(){ $('waitSpeak').checked ? startNarrate() : startTimer(); }
+function togglePlay(){ isPlaying()?stopPlay():startPlay(); }
+
+$('autoBtn').onclick=togglePlay;
+$('fsAuto').onclick=togglePlay;
+$('speakBtn').onclick=()=>{ narrating?stopPlay():startNarrate(); };
+$('fsSpeak').onclick=()=>{ narrating?stopPlay():startNarrate(); };
+// 調整語速或音調時，若正在朗讀則即時套用到本頁
+$('rateIn').addEventListener('change',()=>{ if(narrating) speakCurrent(); });
+$('pitchIn').addEventListener('change',()=>{ if(narrating) speakCurrent(); });
+
+$('next').onclick=nextS; $('prev').onclick=prevS;
+$('fsNext').onclick=nextS; $('fsPrev').onclick=prevS;
+
+jumpIn.addEventListener('change',()=>{
+  let v=parseInt(jumpIn.value)||1; v=Math.max(1,Math.min(70,v)); go(v-1);
+});
+
+// ---- fullscreen ----
+function openFS(){
+  fs.classList.add('show'); render();
+  if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+}
+function closeFS(){
+  fs.classList.remove('show');
+  if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+}
+$('fsBtn').onclick=openFS; $('fsExit').onclick=closeFS;
+document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && fs.classList.contains('show')) closeFS(); });
+
+// ---- theme ----
+$('themeBtn').onclick=()=>{
+  const h=document.documentElement, b=document.body;
+  const dark=b.getAttribute('data-theme')!=='dark';
+  b.setAttribute('data-theme',dark?'dark':'light');
+  h.setAttribute('data-theme',dark?'dark':'light');
+  $('themeBtn').innerHTML=dark?'☀️ 淺色':'🌙 深色';
+};
+// sync html attr initially
+document.documentElement.setAttribute('data-theme','light');
+
+// ---- keyboard ----
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ nextS(); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ prevS(); }
+  else if(e.key==='Escape'){ if(fs.classList.contains('show')) closeFS(); }
+  else if(e.key==='f'||e.key==='F'){ fs.classList.contains('show')?closeFS():openFS(); }
+});
+
+// ---- swipe (touch) on slide & fullscreen ----
+function addSwipe(el){
+  let x0=null;
+  el.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true});
+  el.addEventListener('touchend',e=>{
+    if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>45){ dx<0?nextS():prevS(); } x0=null;
+  },{passive:true});
+}
+addSwipe(document.querySelector('.slide-pane'));
+addSwipe(fs);
+
+// mouse wheel on filmstrip -> horizontal scroll
+strip.addEventListener('wheel',e=>{ if(e.deltaY){ strip.scrollLeft+=e.deltaY; e.preventDefault(); } },{passive:false});
+
+// 離開頁面時停止語音
+window.addEventListener('beforeunload',()=>{ if(synth) synth.cancel(); });
+
+render();
+</script>
+</body>
+</html>
